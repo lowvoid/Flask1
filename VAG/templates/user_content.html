@@ -1,0 +1,55 @@
+{% extends 'dashboard.html' %}
+
+{% block user_content %}
+
+
+
+<div class="userdash">
+    <form action="" method="POST" enctype="multipart/form-data">
+        <main class="user-card">
+            <legend class="form-text" >Your Content</legend>
+            <div class="info-gridbox">
+<section class="usercontent">
+    <div class="usercontainer">
+        <div class="usergrid">
+            {% for feature in current_user.features %}
+            <div class="usercard">
+                <img src="{{ url_for('static', filename='feature_thumbnail/'+feature.thumbnail) }}" alt="img" class="card-img">
+                <div class="card-lesson">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="{{url_for('features.lesson', lesson_slug=feature.slug, service=feature.service.name)}}">{{ feature.title }}</a></h5>
+                        <p class="card-text"><a href="#">{{ feature.service.name }}</a></p>
+                        <span class="sp"><img class="pro-img"
+                                src="{{url_for('static', filename='user_pics/'+feature.author.image_file)}}" alt="">
+                            <a href="#" class="link-author">{{feature.author.username}}</a></span>
+                        <span class="text-date">On: {{feature.date_posted.strftime('%Y-%m-%d')}}</span>
+                        <div class="EDtext">
+                            <a href="{{url_for('features.update_feature',lesson_slug=feature.slug, service=feature.service.name)}}" class="btnn btn-primary">Update</a>
+<form action="{{ url_for('features.delete_feature', feature_id=feature.id) }}" method="POST" style="display:inline;">
+    {{ delete_form.hidden_tag() }}
+    {{ delete_form.submit(class="btnn btn-primary") }}
+</form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+</div>
+</legend>
+</main>
+</form>
+</div>
+
+
+ 
+
+{%  endblock user_content %}
+
+
+
+
+
+

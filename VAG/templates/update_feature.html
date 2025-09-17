@@ -1,0 +1,94 @@
+{% extends 'lesson.html' %}
+
+{% block feature_view %}
+
+<div class="dashbox">
+    <form action="" method="POST" enctype="multipart/form-data" class="feature-form">
+        {{ form.hidden_tag() }}
+        <main class="gl-card">
+            <legend class="form-title" >Update</legend>
+            
+            <div class="info-gridbox">
+
+                <div class="info-box">
+                    {{ form.service.label(class='control-label') }}
+                    {% if form.service.errors %}
+                    {{ form.service(class="input-field error") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.service.errors %}
+                        <span>{{error}}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.service(class="input-field") }}
+                    {% endif %}
+                    <button  type="button" id="openModalBtn" class="btnt btn-secondary">+ New Project</button>
+                </div>
+
+                <div class="info-box">
+                    {{ form.title.label(class='control-label') }}
+                    {% if form.title.errors %}
+                        {{ form.title(class='input-field error') }}
+                        <div class="error-msg">
+                            {% for error in form.title.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.title(class='input-field') }}
+                    {% endif %}
+                </div>
+
+                <div class="info-box">
+                    {{ form.slug.label(class='control-label') }}
+                    {% if form.slug.errors %}
+                        {{ form.slug(class='input-field error') }}
+                        <div class="error-msg">
+                            {% for error in form.slug.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.slug(class='input-field') }}
+                    {% endif %}
+                </div>
+
+                <div class="info-box">
+                    {{ form.content.label(class='control-label') }}
+                    {% if form.content.errors %}
+                        {{ form.content(class='input-field error description') }}
+                        <div class="error-msg">
+                            {% for error in form.content.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.content(class='input-field description') }}
+                    {% endif %}
+                </div>
+
+                <div class="info-box">
+                    {{ form.thumbnail.label(class='controlbt', for='feature_image') }}
+                    {{ form.thumbnail(class='hidden-input', id='feature_image') }}
+                    {% if form.thumbnail.errors %}
+                        <div class="error-msg">
+                            {% for error in form.thumbnail.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+
+
+            
+            <div class="info-btn">
+                {{ form.submit(class='btnt btn-primary') }}
+ 
+            </div>
+        </main>
+    </form>
+    {{ ckeditor.load(custom_url = url_for('static',filename='ckeditor/ckeditor.js')) }}
+    {{ ckeditor.config(name='content', height=400, width=900) }}
+    {% endblock feature_view %}

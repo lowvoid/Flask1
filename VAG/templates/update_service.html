@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="code-box">
+  <div class="feature-card">
+    <h3>Update Service</h3>
+
+    <form action="{{ url_for('services.update_service', service_id=service.id) }}" 
+          method="POST" enctype="multipart/form-data">
+      {{ service_form.hidden_tag() }}
+
+      <div class="info-box">
+        {{ service_form.name.label }} {{ service_form.name(class='input-field') }}
+      </div>
+
+      <div class="info-box">
+        {{ service_form.description.label }} {{ service_form.description(class='input-field') }}
+      </div>
+
+      <div class="info-box">
+        {{ service_form.icon.label }} {{ service_form.icon(class='input-field') }}
+      </div>
+
+      <div class="info-box">
+        {{ service_form.is_private.label }}
+        {{ service_form.is_private(class='form-control') }}
+      </div>
+
+      <div class="info-box">
+        {{ service_form.join_password.label }} {{ service_form.join_password(class='input-field', placeholder="This is in Private") }}
+      </div>
+
+      <div class="info-box">
+        {{ service_form.invite_code.label }} 
+        {{ service_form.invite_code(class="input-field") }}
+        <button type="submit" name="generate_code" class="btnt btn-warning">
+          Generate New Code
+        </button>
+      </div>
+
+      <div class="info-btn">
+        {{ service_form.submit(class='btnt btn-primary', value="Update Service") }}
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

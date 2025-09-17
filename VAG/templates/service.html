@@ -1,0 +1,122 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<h3 class="hea">{{ service.name }}</h3>
+<section class="primary">
+    <div class="container">
+
+        <!-- Service Details -->
+        <div class="service-details">
+            <img src="{{ url_for('static', filename='service_icon/' + service.icon) }}" alt="img" class="service-icon">
+            <p>{{ service.description }}</p>
+            {% if not service.is_private %}
+                {% if current_user.is_authenticated %}
+                    {% if current_user not in service.members and current_user != service.author %}
+                        <form method="POST" action="{{ url_for('services.join_public_service', service_title=service.name) }}">
+                            {{ public_join_form.hidden_tag() }}
+                            {{ public_join_form.submit(class="btn btn-success") }}
+                        </form>
+                    {% else %}
+                        <span class="joined-note">You are a member of this public service</span>
+                    {% endif %}
+                {% else %}
+                    <span class="joined-note">Log in to join this public service</span>
+                {% endif %}
+            {% endif %}
+
+
+            {% if service.is_private %}
+                {% if current_user.is_authenticated %}
+                    {% if current_user not in service.members and current_user != service.author %}
+                        <!-- Join with Password -->
+                        <form action="{{ url_for('services.join_service', service_id=service.id) }}" method="POST">
+                            {{ form.hidden_tag() }}
+                            {{ form.password.label }} {{ form.password(class='input-field') }}
+                            {{ form.submit(class="btn btn-primary") }}
+                        </form>
+
+                        <!-- Join with Invite Code -->
+                        <form method="POST" action="{{ url_for('services.join_with_code', service_id=service.id) }}">
+                            {{ code_form.hidden_tag() }}
+                            {{ code_form.invite_code(class='input-field', placeholder='Enter invite code') }}
+                            {{ code_form.submit(class='btn btn-primary') }}
+                        </form>
+
+                    {% else %}
+                        <span class="joined-note">You are a member of this private service</span>
+                    {% endif %}
+                {% else %}
+                    <span class="joined-note">Log in to join</span>
+                {% endif %}
+            {% else %}
+                <span class="public-note">Accessible to all</span>
+            {% endif %}
+
+        </div>
+
+{% if current_user.is_authenticated and current_user in service.members %}
+    <form method="POST" action="{{ url_for('services.quit_service', service_title=service.name) }}">
+        {{ leave_form.hidden_tag() }}
+        {{ leave_form.submit(class="btn btn-danger") }}
+    </form>
+{% endif %}
+
+
+        {% if current_user == service.author %}
+        <div style="margin-top:15px;">
+            <form action="{{ url_for('services.generate_invite_code', service_id=service.id) }}" method="POST">
+                {{ invitecode.hidden_tag() }}
+                {{ invitecode.submit(class="btn btn-warning") }}
+            </form>
+        </div>
+        {% endif %}
+
+        <!-- Features Grid -->
+        {% if features %}
+        <div class="features-grid" style="margin-top:20px;">
+            {% for feature in features.items %}
+                <div class="feature-card">
+                    <a href="{{url_for('features.lesson', lesson_slug=feature.slug, service=feature.service.name)}}">
+                    <img src="{{ url_for('static', filename='feature_thumbnail/'+feature.thumbnail) }}" alt="img" class="card-img">
+                    <h5 class="card-title"><a href="{{url_for('features.lesson', lesson_slug=feature.slug, service=feature.service.name)}}">{{ feature.title }}</a></h5>
+                    <p class="card-text"><a href="{{url_for('services.service', service_title=feature.service.name)}}">{{ feature.service.name }}</a></p>
+                    <span class="sp"><img class="pro-img"
+                    src="{{url_for('static', filename='user_pics/'+feature.author.image_file)}}" alt="">
+                    <a href="{{url_for('users.author',username=feature.author.username)}}" class="link-author">{{feature.author.username}}</a></span>
+                    <span class="text-date">On: {{feature.date_posted.strftime('%Y-%m-%d')}}</span>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="pagination-wrapper">
+            <ul class="pagination">
+                {% if features.has_prev %}
+                    <li><a href="{{ url_for('services.service', service_title=service.name, page=features.prev_num) }}">« Prev</a></li>
+                {% endif %}
+
+                {% for page_num in features.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
+                    {% if page_num %}
+                        {% if page_num == features.page %}
+                            <li class="active"><span>{{ page_num }}</span></li>
+                        {% else %}
+                            <li><a href="{{ url_for('services.service', service_title=service.name, page=page_num) }}">{{ page_num }}</a></li>
+                        {% endif %}
+                    {% else %}
+                        <li>…</li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if features.has_next %}
+                    <li><a href="{{ url_for('services.service', service_title=service.name, page=features.next_num) }}">Next »</a></li>
+                {% endif %}
+            </ul>
+        </div>
+        {% else %}
+            <p class="locked-note">This service’s features are private. Join to unlock them.</p>
+        {% endif %}
+
+    </div>
+</section>
+
+{% endblock content %}

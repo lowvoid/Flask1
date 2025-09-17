@@ -1,0 +1,94 @@
+{% extends "dashboard.html" %}
+
+{% block user_service %}
+<div style="position: relative; top: -15px;" class="userdash">
+            <main style="position: relative; top: -15px;" class="user-card">
+    <div class="info-gridbox">
+        <legend class="form-text">Your Services</legend>
+        <section class="usercontent">
+            <div class="usercontainer">
+                <div class="usergrid">
+                    {% if services %}
+                        {% for service in services %}
+                        <div style="border-radius: 25px;" class="usercard">
+                            <a class="course-card" href="{{url_for('services.service', service_title=service.name)}}">
+                            <img src="{{ url_for('static', filename='service_icon/' ~ service.icon) }}" 
+                                 alt="{{ service.name }}" class="card-img">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ service.name }}</h5>
+                                    <p class="card-text">{{ service.description }}</p>
+                                </a>
+                                    <span class="sp">
+                                        <img class="pro-img"
+                                             src="{{ url_for('static', filename='user_pics/' ~ service.author.image_file) }}"
+                                             alt="">
+                                        <a href="#" class="link-author">{{ service.author.username }}</a>
+                                    </span>
+                                    
+                                    <div class="EDtext">
+                                        {% if service.author == current_user %}
+                                            <a href="{{ url_for('services.update_service', service_id=service.id) }}" class="btnn btn-primary">Update</a>
+                                            <form action="{{ url_for('services.delete_service', service_id=service.id) }}" method="POST" style="display:inline;">
+                                                {{ delete_form.hidden_tag() }}
+                                                <button type="submit" class="btnn btn-primary">Delete</button>
+                                            </form>
+                                        {% else %}
+                                            {% if service.is_private %}
+                                                {% if current_user in service.members %}
+                                                    <span class="joined-note">Private - You have access</span>
+                                                {% else %}
+                                                    <form method="POST" action="{{ url_for('services.join_service', service_id=service.id) }}">
+                                                        {{ form.hidden_tag() }}
+                                                        <button type="submit" class="btnn btn-primary">Join</button>
+                                                    </form>
+                                                {% endif %}
+                                            {% else %}
+                                                <span class="joined-note">Public Service</span>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                            <div class="card-body no-services">
+                                <p>You haven't created any services yet.</p>
+                                <a href="{{ url_for('services.services_page') }}" class="btnn btn-primary">Browse Services</a>
+                            </div>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+</div>
+
+{% if current_user.joined_services %}
+<div class="userdash">
+            <main class="user-card">
+    <legend class="form-text">Services You Joined</legend>
+    <div class="info-gridbox">
+        <section class="usercontent">
+            <div class="usercontainer">
+                <div class="usergrid">
+                    {% for service in current_user.joined_services %}
+                    <div style="border-radius: 25px;" class="usercard">
+                        <a class="course-card" href="{{url_for('services.service', service_title=service.name)}}">
+                        <img src="{{ url_for('static', filename='service_icon/' ~ service.icon) }}" 
+                             alt="{{ service.name }}" class="card-img">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ service.name }}</h5>
+                            <p class="card-text">{{ service.description }}</p>
+                            <span class="joined-note">You are a member of this service</span>
+                        </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+</div>
+{% endif %}
+{% endblock user_service %}

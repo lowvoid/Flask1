@@ -1,0 +1,89 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<h3 class="hea" id="services">Services</h3>
+<section class="primary">
+    <div class="container">
+        <div class="services-grid">
+            {% for service in services.items %}
+                <a class="service-card" href="{{ url_for('services.service', service_title=service.name) }}">
+                    <div class="feature-card">
+                        <img src="{{ url_for('static', filename='service_icon/' + service.icon) }}" alt="img" class="card-img">
+                        <h4 class="card-title">
+                            {{ service.name }}
+                            {% if service.is_private %}
+                                <span class="badge-private">Private</span>
+                            {% else %}
+                                <span class="badge-public">Public</span>
+                            {% endif %}
+                        </h4>
+                        <p class="card-text">{{ service.description }}</p>
+
+
+
+                        {% if not service.is_private %}
+                            {% if current_user.is_authenticated %}
+                                {% if current_user not in service.members and current_user != service.author %}
+                                    <form method="POST" action="{{ url_for('services.join_public_service', service_title=service.name) }}">
+                                        {{ public_join_form.hidden_tag() }}
+                                        {{ public_join_form.submit(class="btn btn-primary") }}
+                                    </form>
+                                {% else %}
+                                    <span class="joined-note">You are a member of this public service</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="joined-note">Log in to join this public service</span>
+                            {% endif %}
+                        {% endif %}
+
+
+
+
+                        {% if service.is_private %}
+                            {% if current_user.is_authenticated %}
+                                {% if current_user not in service.members and current_user != service.author %}
+                                    <form action="{{ url_for('services.join_service', service_id=service.id) }}" method="POST">
+                                        {{ join_forms[service.id].hidden_tag() }}
+                                        {{ join_forms[service.id].submit(class="btn btn-primary") }}
+                                    </form>
+                                {% else %}
+                                    <span class="joined-note">You are a member of this private service</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="joined-note">Log in to join</span>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<div class="pagination-wrapper">
+    <ul class="pagination">
+        {% if services.has_prev %}
+            <li><a href="{{ url_for('services.services_page', page=services.prev_num) }}">« Prev</a></li>
+        {% endif %}
+
+        {% for page_num in services.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
+            {% if page_num %}
+                {% if page_num == services.page %}
+                    <li class="active"><span>{{ page_num }}</span></li>
+                {% else %}
+                    <li><a href="{{ url_for('services.services_page', page=page_num) }}">{{ page_num }}</a></li>
+                {% endif %}
+            {% else %}
+                <li>…</li>
+            {% endif %}
+        {% endfor %}
+
+        {% if services.has_next %}
+            <li><a href="{{ url_for('services.services_page', page=services.next_num) }}">Next »</a></li>
+        {% endif %}
+    </ul>
+</div>
+
+
+
+{% endblock content %}

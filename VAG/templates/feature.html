@@ -1,0 +1,186 @@
+{% extends 'dashboard.html' %}
+
+{% block new_feature %}
+
+<div class="dashbox">
+    <form action="" method="POST" enctype="multipart/form-data" class="feature-form">
+        {{ feature_form.hidden_tag() }}
+        <main class="gl-card">
+            <legend class="form-title" >New Content</legend>
+            
+            <div class="info-gridbox">
+                <div class="info-box">
+                    {{ feature_form.service.label(class='control-label') }}
+                    {% if feature_form.service.errors %}
+                    {{ feature_form.service(class="input-field error") }}
+                    <div class="invalid-feedback">
+                        {% for error in feature_form.service.errors %}
+                        <span>{{error}}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ feature_form.service(class="input-field") }}
+                    {% endif %}
+                    <button  type="button" id="openModalBtn" class="btnt btn-secondary">+ New Service</button>
+                </div>
+
+                <div class="info-box">
+                    {{ feature_form.title.label(class='control-label') }}
+                    {% if feature_form.title.errors %}
+                        {{ feature_form.title(class='input-field error') }}
+                        <div class="error-msg">
+                            {% for error in feature_form.title.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ feature_form.title(class='input-field') }}
+                    {% endif %}
+                </div>
+
+                <div class="info-box">
+                    {{ feature_form.slug.label(class='control-label') }}
+                    {% if feature_form.slug.errors %}
+                        {{ feature_form.slug(class='input-field error') }}
+                        <div class="error-msg">
+                            {% for error in feature_form.slug.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ feature_form.slug(class='input-field') }}
+                    {% endif %}
+                </div>
+
+                <div class="info-box">
+                    {{ feature_form.content.label(class='control-label') }}
+                    {% if feature_form.content.errors %}
+                        {{ feature_form.content(class='input-field error description') }}
+                        <div class="error-msg">
+                            {% for error in feature_form.content.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ feature_form.content(class='input-field description') }}
+                    {% endif %}
+                </div>
+
+                <div class="info-box">
+                    {{ feature_form.thumbnail.label(class='controlbt', for='feature_image') }}
+                    {{ feature_form.thumbnail(class='hidden-input', id='feature_image') }}
+                    {% if feature_form.thumbnail.errors %}
+                        <div class="error-msg">
+                            {% for error in feature_form.thumbnail.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+
+
+            
+            <div class="info-btn">
+                {{ feature_form.submit(class='btnt btn-primary') }}
+
+            </div>
+        </main>
+    </form>
+{{ ckeditor.load(custom_url=url_for('static', filename='ckeditor/ckeditor.js')) }}
+{{ ckeditor.config(name='content', height=400, width=900) }}
+<!-- Modal -->
+<div class="modal" id="newProjectModal">
+  <div class="modal-content">
+    <span id="closeModalBtn" class="close">&times;</span>
+    <h3>Create New Service</h3>
+
+    <form action="{{ url_for('features.feature') }}" method="POST" enctype="multipart/form-data">
+      {{ service_form.hidden_tag() }}
+
+      <div class="info-box">
+        {{ service_form.name.label }} {{ service_form.name(class='input-field') }}
+      </div>
+
+      <div class="info-box">
+        {{ service_form.description.label }} {{ service_form.description(class='input-field') }}
+      </div>
+
+      <div class="info-box">
+        {{ service_form.icon.label }} {{ service_form.icon(class='input-field') }}
+      </div>
+
+      <div class="info-box">
+        {{ service_form.is_private.label }}
+        {{ service_form.is_private(class='form-control', id='is_private') }}
+      </div>
+
+      <div class="info-box" id="passwordBox" style="display:none;">
+        {{ service_form.join_password.label }} {{ service_form.join_password(class='input-field') }}
+      </div>
+
+      <div class="info-box" id="inviteCodeBox" style="display:none;">
+        <label for="invite_code">Invite Code</label>
+        {{ service_form.invite_code(class="input-field", id="invite_code") }}
+        <button type="button" class="btnt btn-warning" id="generateCodeBtn">Generate Code</button>
+      </div>
+
+      <div class="info-btn">
+        {{ service_form.submit(class='btnt btn-primary') }}
+        <button type="button" class="btnt btn-secondary" id="closeModalBtn2">Close</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+let modal = document.getElementById("newProjectModal");
+let openBtn = document.getElementById("openModalBtn");
+let closeBtn = document.getElementById("closeModalBtn");
+let closeBtn2 = document.getElementById("closeModalBtn2");
+
+openBtn.onclick = () => modal.style.display = "block";
+closeBtn.onclick = () => modal.style.display = "none";
+closeBtn2.onclick = () => modal.style.display = "none";
+window.onclick = e => { if(e.target == modal) modal.style.display="none"; }
+
+
+document.addEventListener('DOMContentLoaded', function(){
+  const selectBox = document.getElementById("is_private");
+  const passwordBox = document.getElementById("passwordBox");
+  const inviteBox  = document.getElementById("inviteCodeBox");
+  const inviteInput = document.getElementById("invite_code");
+  const genBtn = document.getElementById("generateCodeBtn");
+
+  function togglePrivateUI() {
+    const isPrivate = selectBox.value === "1";
+    passwordBox.style.display = isPrivate ? "block" : "none";
+    inviteBox.style.display   = isPrivate ? "block" : "none";
+
+    if (isPrivate && !inviteInput.value) {
+      fetch("{{ url_for('features.generate_invite_code') }}")
+        .then(r => r.json())
+        .then(d => { inviteInput.value = d.invite_code; })
+        .catch(err => console.error("Code fetch failed:", err));
+    }
+  }
+
+  selectBox.addEventListener("change", togglePrivateUI);
+
+  genBtn.addEventListener("click", function(e){
+    e.preventDefault();
+    fetch("{{ url_for('features.generate_invite_code') }}")
+      .then(r => r.json())
+      .then(d => { inviteInput.value = d.invite_code; })
+      .catch(err => console.error("Code fetch failed:", err));
+  });
+
+  togglePrivateUI();
+});
+</script>
+
+</div>
+
+{% endblock new_feature %}
+

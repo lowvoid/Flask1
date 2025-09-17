@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="same">
+    <div class="content-area">
+
+        <div class="article">
+        <div class="article-body">
+            {% block feature_view %}
+            {% endblock feature_view %}
+        </div>
+                        
+        <div class="lesson-nav">
+        <div>
+            {% if previous_lesson %}
+                <a href="{{ url_for('features.lesson', service=service, lesson_slug=previous_lesson.slug) }}" 
+                   class="btnn btn-warning">
+                    ← {{ previous_lesson.title }}
+                </a>
+            {% else %}
+                <button class="btnn btn-outline-secondary" disabled>← Nothing</button>
+            {% endif %}
+        </div>
+
+        <div>
+            {% if next_lesson %}
+                <a href="{{ url_for('features.lesson', service=service, lesson_slug=next_lesson.slug) }}" 
+                   class="btnn btn-warning">
+                    {{ next_lesson.title }} →
+                </a>
+            {% else %}
+                <button class="btnn btn-outline-secondary" disabled>Nothing →</button>
+            {% endif %}
+        </div>
+        </div>
+    </div>
+
+
+       <div class="sidebarr">
+            <!-- author -->
+            <div class="author">
+                <img class="article-img" src="{{url_for('static',filename='user_pics/'+lesson.author.image_file)}}" alt="">
+                <span>By:
+                    <a href="{{url_for('users.author',username=lesson.author.username)}}" class="link">{{lesson.author.username}}</a>
+                    <span class="text-muted">On: {{lesson.date_posted.strftime('%Y-%m-%d')}}</span>
+                </span>
+            </div>
+
+            <!-- icon -->
+            <img class="course-icon" src="{{url_for('static', filename='service_icon/'+lesson.service.icon)}}" alt="">
+            
+            <!-- list -->
+            <ul class="lesson-list">
+                {% for lsn in lesson.service.features %}
+                    <li class="lesson-item {% if lsn.title == lesson.title %}active{% endif %}">
+                        <a href="{{url_for('features.lesson', lesson_slug=lsn.slug, service=lsn.service.name)}}">
+                            {{lsn.title}}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock content%}
+
+
+

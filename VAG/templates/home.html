@@ -1,0 +1,97 @@
+{% extends 'layout.html' %}
+{% block content %}
+<!-- LANDING -->
+<div class="fullbar">
+    
+    <div class="bar">
+    </div>
+</div>
+<!-- LANDING -->
+
+<div class="landing">
+    <div class="intro">
+        <h1>Hello</h1>
+        <p><p>Website helps you build, manage, and share services whether private or public</p></p>
+                    <div class="btn-group" style="z-index: 3;">
+                <a href="{{ url_for('services.join_code') }}" class="cbtn">Join With Code</a>
+                <a href="{{ url_for('features.feature') }}" class="cbtn">Go To Create</a>
+            </div>
+    </div>
+</div>
+
+<!-- LANDING -->
+
+
+
+
+
+
+<!-- Projects -->
+
+<h3 class="hea" id="services">Services</h3>
+<section class="primary">
+    <div class="container">
+        <div class="courses-grid">
+            {% for service in services.items %}
+                <a class="course-card" href="{{url_for('services.service', service_title=service.name)}}">
+                    <div class="card-body">
+                        <img src="{{ url_for('static', filename='service_icon/'+service.icon) }}" alt="img" class="card-img">
+                        <h4 class="card-title">{{ service.name }}</h4>
+                        <p class="card-text">{{ service.description }}</p>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+        <div class="more" style="display: flex; justify-content:center;">
+        <a href="{{url_for('services.services_page')}}" class="btnn btn-primary">More</a>
+        </div>
+    </div>
+</section>
+<!-- ENDProjects -->
+
+<!-- Feature -->
+<h2 class="hea" id="features" style="margin-top: -60px;">Features</h2>
+<section class="secondary"> 
+    <div class="container">
+        <div class="f-grid">
+            {% for feature in features.items %}
+            <div class="feature-card">
+                <img src="{{ url_for('static', filename='feature_thumbnail/'+feature.thumbnail) }}" alt="img" class="card-img">
+                <div class="card-lesson">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="{{url_for('features.lesson', lesson_slug=feature.slug, service=feature.service.name)}}">{{ feature.title }}</a></h5>
+                        <p class="card-text"><a href="{{url_for('services.service', service_title=feature.service.name)}}">{{ feature.service.name }}</a></p>
+                        <span class="sp"><img class="pro-img"
+                                src="{{url_for('static', filename='user_pics/'+feature.author.image_file)}}" alt="">
+                            <a href="{{url_for('users.author',username=feature.author.username)}}" class="link-author">{{feature.author.username}}</a></span>
+                        <span class="text-date">On: {{feature.date_posted.strftime('%Y-%m-%d')}}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+</section>
+
+<!-- ENDFeature  -->
+
+
+
+<!-- Contact  -->
+        <div style="margin-top: -80px;" class="contact">
+        <div class="container">
+            <h2 class="special-heading" >Contact</h2>
+            <p style="filter: blur(0.8px); position:relative; bottom: 8px;">Us</p>
+            <div class="content" id="contact"> 
+                <p class="info">Let’s Connect</p>
+                <a class="email" href="mailto:realvirtualcode@gmail.com?subject=Contact">realvirtualcode@gmail.com</a>
+                <div class="social">
+                    Find Us On Social Networks
+                    <i class="fas fa-link"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- END Contact -->
+
+{% endblock content %}

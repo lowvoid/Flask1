@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="code-box">
+<div class="feature-card">
+<h2>Set Invite Code for {{ service.name }}</h2>
+
+<form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="text" name="invite_code" placeholder="Enter new invite code" 
+           value="{{ service.invite_code or '' }}" required>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+
+    
+    
+    
+    
+{% extends 'layout.html' %}
+{% block content %}
+
+
+
+<div class="dashboard">
+    
+    
+    <div class="m-content">
+        {% block profile %}
+        {%  endblock profile %}
+        
+        {% block new_feature %}
+        {%  endblock new_feature %}
+
+        {% block user_content %}
+        {%  endblock user_content %}
+
+        {% block user_service %}
+        {%  endblock user_service %}
+
+    </div>
+    
+    <!-- Sidebar -->
+    <aside class="sidebar glass-card">
+        <div class="profile">
+            <img src="{{ image_file }}" alt="user" class="user-img">
+            <h3>{{ current_user.username }}</h3>
+            <p class="mail">{{ current_user.email }}</p>
+        </div>
+        <ul class="menu">
+            <li class="{% if request.path == '/dashboard/profile' %}active{% endif %}">
+                <a href="/dashboard/profile">Profile</a>
+            </li>
+            <li class="{% if request.path == '/dashboard/feature' %}active{% endif %}">
+                <a href="/dashboard/feature">Add Content</a>
+            </li>
+            <li class="{% if request.path == '/dashboard/user_content' %}active{% endif %}">
+                <a href="/dashboard/user_content">My Content</a>
+            </li>
+            <li class="{% if request.path == '/dashboard/user_services' %}active{% endif %}">
+                <a href="/dashboard/user_services">My Services</a>
+            </li>
+        </ul>
+    </aside>
+</div>
+    
+{% endblock content %}
+
+
+
+</body>
+</html>

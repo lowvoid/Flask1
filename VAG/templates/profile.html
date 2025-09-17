@@ -1,0 +1,88 @@
+{% extends 'dashboard.html'%}
+
+{% block profile %}
+
+<div class="dashtable">
+     <form  action="" method="POST" , enctype="multipart/form-data">
+        {{ profile_form.hidden_tag() }}
+    <main class="main glass-card">
+        <h2>Profile Overview</h2>
+        <div class="info-grid">
+            <div class="info-box">
+                {{ profile_form.fname.label(class='control-label') }}
+                {% if profile_form.fname.errors %}
+                {{ profile_form.fname(class='from-control') }}
+                <div class="invalid-feedback">
+                    {% for error in profile_form.fname.errors %}
+                    <span>{{error}}</span>
+                    {%endfor%}
+                </div>
+                {% else %}
+                {{ profile_form.fname(class='from-control') }}
+                {% endif %}
+            </div>
+            <div class="info-box">
+                {{ profile_form.lname.label(class='control-label') }}
+                {% if profile_form.lname.errors %}
+                {{ profile_form.lname(class='from-control') }}
+                <div class="invalid-feedback">
+                    {% for error in profile_form.lname.errors %}
+                    <span>{{error}}</span>
+                    {%endfor%}
+                </div>
+                {% else %}
+                {{ profile_form.lname(class='from-control') }}
+                {% endif %}
+            </div>
+            <div class="info-box">
+                {{ profile_form.username.label(class='control-label') }}
+                {% if profile_form.username.errors %}
+                {{ profile_form.username(class='from-control') }}
+                <div class="invalid-feedback">
+                    {% for error in profile_form.username.errors %}
+                    <span>{{error}}</span>
+                    {%endfor%}
+                </div>
+                {% else %}
+                {{ profile_form.username(class='from-control') }}
+                {% endif %}
+            </div>
+            <div class="info-box">
+                {{ profile_form.email.label(class='control-label') }}
+                {% if profile_form.email.errors %}
+                {{ profile_form.email(class='from-control') }}
+                <div class="invalid-feedback">
+                    {% for error in profile_form.email.errors %}
+                    <span>{{error}}</span>
+                    {%endfor%}
+                </div>
+                {% else %}
+                {{ profile_form.email(class='from-control') }}
+                {% endif %}
+            </div>
+        </div>
+        <div class="info-box">
+        <h3 class="mt-4">Biography</h3>
+        {{ profile_form.bio.label(class='control-label') }}
+        {{ profile_form.bio(class='from-control') }}
+        <p>{{ current_user.bio or "No bio available." }}</p>
+        </div>
+        <div class="info-btn">
+            {{profile_form.picture.label(class='controlbt' , for="picture")}}
+            {{profile_form.picture(class='hidden-input',id='picture')}}
+            {% if profile_form.picture.errors %} 
+            {% for error in profile_form.picture.errors %}
+            <span class="invalid-feedback">{{error}}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
+        <div class="info-btn">
+            <button type="submit" class="from-control" class="btn-update">Update Profile</button>
+        </div>
+    </main>
+    </form>
+
+</div>
+
+
+{%  endblock profile %}

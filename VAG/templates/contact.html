@@ -1,0 +1,53 @@
+{%extends "layout.html"%}
+{% block content %}
+    <div class="contact">
+        <div class="container">
+            <h2 class="special-heading" >Contact</h2>
+            <p style="filter: blur(0.8px); position:relative; bottom: 8px;">Us</p>
+            <div class="content" id="contact"> 
+                <p class="info">Let’s Connect</p>
+                <a class="email" href="mailto:realvirtualcode@gmail.com?subject=Contact">realvirtualcode@gmail.com</a>
+                <div class="social">
+                    Find Us On Social Networks
+                    <i class="fas fa-link"></i>
+                </div>
+            </div>
+        </div> 
+    </div>
+<div class="code-box" style="width:70%; margin-top: -250px;">
+<div class="feature-card">
+<h2>Contact Me</h2>
+<form method="POST" action="">
+    {{ form.hidden_tag() }}
+
+    <div>
+        {{ form.name.label }}<br>
+        {{ form.name(size=30) }}
+        {% for error in form.name.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </div>
+
+    <div>
+        {{ form.email.label }}<br>
+        {{ form.email(size=30) }}
+        {% for error in form.email.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </div>
+
+    <div>
+        {{ form.message.label }}<br>
+        {{ form.message(cols=40, rows=5) }}
+        {% for error in form.message.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </div>
+
+    <div>
+        {{ form.submit() }}
+    </div>
+    </div>
+    </div>
+</form>
+{% endblock content %}

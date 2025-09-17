@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{ fontawesome_css() }}
+    {% if title %}
+    <title>O - {{ title }}</title>
+    {% else %}
+    <title>O</title>
+    {% endif %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='image/logo.jpg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome/css/all.min.css') }}">
+    {{ ckeditor.load_code_theme() }}
+</head>
+
+<body>
+    <!-- START NAV -->
+    <div class="header">
+        <div class="container">
+            <a  href="{{url_for('main.home')}}">
+                <img class="logo" src="{{ url_for('static', filename='image/logo.jpg') }}" alt="VAG">
+            </a>
+            <div class="links">
+                <span class="icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+                <span>
+                    <ul>
+                        {% if request.path == '/home' %}
+                        <li><a href="{{ url_for('main.home') }}#services">Services</a></li>
+                        {% else %}
+                        <li><a href="{{ url_for('services.services_page') }}">Services</a></li>
+                        {% endif %}
+                        <li><a href="{{ url_for('main.home') }}#features">Features</a></li>
+                        <li><a href="{{url_for('main.contact')}}">Contact</a></li>
+                        <li><a href="{{url_for('main.about')}}">About</a></li>
+                        {% if current_user.is_authenticated %}
+                        <li>
+                        <a href="{{ url_for('services.my_services') }}">Set Code</a>
+                        </li>
+                        <li>
+                            <a href="{{url_for('users.logout')}}">Logout</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </span>
+            </div>
+            <div class="sec-links">    
+                <ul> 
+                    {% if current_user.is_authenticated %}
+                    <li>
+                        <a href="{{url_for('users.dashboard')}}">Dashboard</a>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a class="a" href="{{url_for('users.register')}}">Register</a>
+                    </li>
+                    <li>
+                        <a class="b" href="{{url_for('users.login')}}">Login</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- END NAV -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <body>
+    <div class="bg"></div>
+    </body>
+
+    
+    <main>
+        {% block content %} {% endblock content %}
+    </main>
+    
+    
+    <!-- START FOOTER -->
+    <div class="footer">&copy; 2025 <span>VAG</span> </div>
+    <!-- END FOOTER -->
+
+
+</body>
+</html>

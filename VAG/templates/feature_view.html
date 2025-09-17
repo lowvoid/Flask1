@@ -1,0 +1,10 @@
+{% extends 'lesson.html' %}
+{% block feature_view %}
+        <div class="article-body">
+            <h2>{{ lesson.title }}</h2>
+            <hr>
+            <p>
+                {{ lesson.content | safe }}
+            </p>
+        </div>
+{% endblock feature_view  %}

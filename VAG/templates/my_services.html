@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="code-box" style="margin-top: -100px; margin-bottom: 0px;">
+<div class="feature-card">
+
+  <h2>My Services</h2>
+  <ul>
+    {% for service in services %}
+    <li>
+      <span class="btnn " style="background-color: rgba(0, 0, 0, 0.3); backdrop-filter: blur(8px); width: 40%; padding: 5px; margin: 20px auto;" >
+        {{ service.name}}
+      </span>
+      <a class="btn" style="text-shadow:0px 0px 3px rgb(0, 0, 0); border-radius: 30px;"  href="{{ url_for('services.set_invite_code', service_id=service.id) }}">
+        Set Code
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+</div>
+{% endblock %}

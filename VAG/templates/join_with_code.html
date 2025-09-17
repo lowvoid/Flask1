@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="code-box">
+<div class="feature-card">
+    <h2>Join Service with Invite Code</h2>
+
+    <form method="POST" action="{{ url_for('services.join_code') }}">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+            {{ form.invite_code.label }}
+            {{ form.invite_code(class="form-control") }}
+        </div>
+
+        {{ form.submit(class="btn btn-primary mt-2") }}
+    </form>
+</div>
+</div>
+
+
+{% endblock %}
